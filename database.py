@@ -14,10 +14,8 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
-# Create a cursor object
 cursor = conn.cursor()
 
-# Create tables for activities and destinations
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS Shows (
     ID INTEGER,
@@ -40,30 +38,23 @@ CREATE TABLE IF NOT EXISTS Ratings (
 )
 ''')
 
-# Commit the changes
 conn.commit()
 
-# Load activities data
 shows_df = pd.read_csv('Shows.csv')
 shows_df.to_sql('Shows', conn, if_exists='replace', index=False)
 
-# Load destinations data
 ratings_df = pd.read_csv('Ratings.csv')
 ratings_df.to_sql('Ratings', conn, if_exists='replace', index=False)
 
-# Commit the changes
 conn.commit()
-# Query to extract data from shows
 shows_query = cursor.execute('SELECT * FROM shows')
 shows_data = shows_query.fetchall()
 
-# Query to extract data from destinations
 ratings_query = cursor.execute('SELECT * FROM Ratings')
 ratings_data = ratings_query.fetchall()
 
 
 
-# Print the extracted data
 print("Shows Data:")
 for row in shows_data:
     print(row)
@@ -74,7 +65,6 @@ for row in ratings_data:
 
 engine = create_engine("sqlite:///./recommendation_system.db")
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) 
-# Close the connection
 conn.close()
 
 Base.metadata.create_all(bind=engine)
