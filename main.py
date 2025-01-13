@@ -65,7 +65,6 @@ class User(BaseModel):
    
 
 def verify_password(plain_password, STORED_HASHED_PASSWORD):
-    # Verifying if the plain password matches the hashed password using bcrypt
     return pwd_context.verify(plain_password, STORED_HASHED_PASSWORD)
 
 
