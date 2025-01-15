@@ -4,4 +4,3 @@ df = pd.read_csv('Shows.csv')
 
 print("Data from CSV:")
 print(df)
-
