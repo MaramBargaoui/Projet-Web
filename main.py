@@ -109,7 +109,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     if form_data.username != "testuser" or not verify_password(form_data.password, STORED_HASHED_PASSWORD):
 
 
-        print("Password verification failed.")  # Debugging
+        print("Password verification failed.")  
         raise HTTPException(status_code=401, detail="Invalid credentials")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": form_data.username}, expires_delta=access_token_expires)
@@ -118,7 +118,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 @app.get("/shows/")
 async def read_shows(db: Session = Depends(get_db)):
-    shows = db.query(Shows).all()  # Use the session to query the database
+    shows = db.query(Shows).all()  
     return shows
 
 @app.get("/shows/{show_id}", response_model=Show)
