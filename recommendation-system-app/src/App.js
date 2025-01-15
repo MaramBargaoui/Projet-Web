@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
+import image from './assets/image.png';  // Import the image
 
 const App = () => {
   // State to store user input, token, shows, and loading state
@@ -52,6 +53,12 @@ const App = () => {
 
   return (
     <div className="App">
+      <header className="App-header">
+        <h1>Welcome to the Theater of Tunis</h1>
+        {/* Display the image */}
+        <img src={image} alt="Theater of Tunis" className="theater-image" />
+      </header>
+
       <h1>Shows and Ratings</h1>
 
       {/* Login Form */}

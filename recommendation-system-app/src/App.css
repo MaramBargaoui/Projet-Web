@@ -22,6 +22,15 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  text-align: center;  /* This centers the content within the header */
+  margin-top: 50px;  /* This adds spacing from the top of the page */
+}
+
+.theater-image {
+  width: 80%;  /* Adjust the size of the image */
+  height: auto;  /* Maintain aspect ratio */
+  border-radius: 10px;  /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Soft shadow effect */
 }
 
 .App-link {
