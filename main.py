@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from dotenv import load_dotenv 
 import os  
-from models import Base, Shows, Ratings  
+from Database.models import Base, Shows, Ratings  
 from Database.database import engine, SessionLocal
 from schemas import Show, Rating
 from passlib.context import CryptContext
