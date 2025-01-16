@@ -37,7 +37,7 @@ const Login = ({ onLogin }) => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" className="button">Login</button>
       </form>
     </div>
   );
@@ -110,6 +110,52 @@ const App = () => {
     } catch (error) {
       console.error("Login failed:", error);
     }
+  };
+
+  // Handle form input changes for shows
+  const handleShowInputChange = (e) => {
+    setShowForm({
+      ...showForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Handle form input changes for ratings
+  const handleRatingInputChange = (e) => {
+    setRatingForm({
+      ...ratingForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Handle Show form submission
+  const handleShowFormSubmit = (e) => {
+    e.preventDefault();
+    if (editShowId) {
+      // Update show logic here
+    } else {
+      // Add new show logic here
+    }
+  };
+
+  // Handle Rating form submission
+  const handleRatingFormSubmit = (e) => {
+    e.preventDefault();
+    if (editRatingId) {
+      // Update rating logic here
+    } else {
+      // Add new rating logic here
+    }
+  };
+
+  // Delete a show
+  const handleDeleteShow = (showId) => {
+    // Deletion logic here
+  };
+
+  // Delete a rating
+  const handleDeleteRating = (ratingId) => {
+    // Deletion logic here
   };
 
   return (
