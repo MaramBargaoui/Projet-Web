@@ -1,0 +1,60 @@
+/* Center the entire body content */
+body {
+  display: flex;
+  justify-content: center;  /* Center horizontally */
+  align-items: center;      /* Center vertically */
+  height: 100vh;            /* Full viewport height */
+  margin: 0;
+  font-family: Arial, sans-serif; /* Set a default font */
+  background-color: #f5f5f5; /* Light background color */
+}
+
+/* Container to hold the form and title */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for aesthetics */
+  width: 100%;
+  max-width: 400px;   /* Limit the max width of the form */
+  text-align: center; /* Center text */
+}
+
+/* Style the title */
+h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Style the form inputs */
+form {
+  width: 100%;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Style the submit button */
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;  /* Button hover effect */
+}
