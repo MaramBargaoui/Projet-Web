@@ -1,6 +1,3 @@
-// Remove the import statement for `reportWebVitals` from 'web-vitals'
-
-// Define your custom reportWebVitals function
 const reportWebVitals = onPerfEntry => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
     import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {

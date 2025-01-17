@@ -1,294 +1,83 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Login from './components/Login';
+import ShowList from './components/ShowList';
+import ShowForm from './components/ShowForm';
+import Recommendations from './components/Recommendations';
+import Navbar from './components/Navbar';
+import './App.css';
 
-// Login Component
-const Login = ({ onLogin }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onLogin(username, password); // Call the login function passed as a prop
-  };
-
-  return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Enter username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="button">Login</button>
-      </form>
-    </div>
-  );
-};
-
-// Main App Component
-const App = () => {
+function App() {
+  const [token, setToken] = useState(localStorage.getItem('token'));
   const [shows, setShows] = useState([]);
   const [ratings, setRatings] = useState([]);
-  const [showForm, setShowForm] = useState({
-    title: "",
-    genre: "",
-    date: "",
-    artist: "",
-  });
-  const [ratingForm, setRatingForm] = useState({
-    votes: "",
-    ratings: "",
-    recommendation: "",
-  });
-  const [editShowId, setEditShowId] = useState(null);
-  const [editRatingId, setEditRatingId] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token") || "");
 
-  // Fetch shows
-  const fetchShows = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/shows/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setShows(response.data);
-    } catch (error) {
-      console.error("Error fetching shows:", error);
-    }
+  const handleLogin = (newToken) => {
+    setToken(newToken);
+    localStorage.setItem('token', newToken);
   };
 
-  // Fetch ratings
-  const fetchRatings = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/ratings/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setRatings(response.data);
-    } catch (error) {
-      console.error("Error fetching ratings:", error);
-    }
+  const handleLogout = () => {
+    setToken(null);
+    localStorage.removeItem('token');
   };
 
+  // Fetching the data (simulating API calls)
   useEffect(() => {
     if (token) {
+      // Simulating loading data for shows and ratings
       fetchShows();
       fetchRatings();
     }
   }, [token]);
 
-  // Handle login
-  const handleLogin = async (username, password) => {
-    try {
-      const response = await axios.post("http://localhost:8000/token/", {
-        username,
-        password,
-      });
-      const { access_token } = response.data;
-      setToken(access_token);
-      localStorage.setItem("token", access_token);
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
+  const fetchShows = async () => {
+    // Replace with your API call or use the shows.csv data
+    setShows([
+      { id: 1, title: "Emel Mathlouthi", genre: "Musical", date: "2011", artist: "Emel Mathlouthi" },
+      { id: 2, title: "Le Dîner de cons?", genre: "Drama", date: "2023", artist: "David Mira-Jover" },
+      { id: 3, title: "Evasion", genre: "Comedy", date: "2023", artist: "Aziz Jebali" },
+      { id: 4, title: "Le Placard", genre: "Drama", date: "2023", artist: "Alain Zouvi" },
+      { id: 5, title: "Le Tourbillon", genre: "Musical", date: "2022", artist: "Julien Duvivier" }
+    ]);
   };
 
-  // Handle form input changes for shows
-  const handleShowInputChange = (e) => {
-    setShowForm({
-      ...showForm,
-      [e.target.name]: e.target.value,
+  const fetchRatings = async () => {
+    // Replace with your API call or use the ratings.csv data
+    setRatings([
+      { id: 1, votes: 55037, rating: 7.8, recommendation: "Recommended" },
+      { id: 2, votes: 45531, rating: 5.0, recommendation: "Not Recommended" },
+      { id: 3, votes: 38917, rating: 4.2, recommendation: "Not Recommended" },
+      { id: 4, votes: 74522, rating: 8.7, recommendation: "Highly Recommended" },
+      { id: 5, votes: 49199, rating: 7.5, recommendation: "Recommended" }
+    ]);
+  };
+
+  const getRecommendedShows = (genre) => {
+    // Filtering the shows based on the genre and rating recommendations
+    const recommendedShows = shows.filter((show) => {
+      const rating = ratings.find((r) => r.id === show.id);
+      return rating && rating.recommendation === "Recommended" && show.genre === genre;
     });
-  };
-
-  // Handle form input changes for ratings
-  const handleRatingInputChange = (e) => {
-    setRatingForm({
-      ...ratingForm,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  // Handle Show form submission
-  const handleShowFormSubmit = (e) => {
-    e.preventDefault();
-    if (editShowId) {
-      // Update show logic here
-    } else {
-      // Add new show logic here
-    }
-  };
-
-  // Handle Rating form submission
-  const handleRatingFormSubmit = (e) => {
-    e.preventDefault();
-    if (editRatingId) {
-      // Update rating logic here
-    } else {
-      // Add new rating logic here
-    }
-  };
-
-  // Delete a show
-  const handleDeleteShow = (showId) => {
-    // Deletion logic here
-  };
-
-  // Delete a rating
-  const handleDeleteRating = (ratingId) => {
-    // Deletion logic here
+    return recommendedShows;
   };
 
   return (
-    <div>
-      {!token ? (
-        <Login onLogin={handleLogin} /> // Pass the handleLogin function as a prop
-      ) : (
-        <div>
-          <h1>Shows and Ratings App</h1>
-          {/* Shows Form */}
-          <form onSubmit={handleShowFormSubmit}>
-            <h2>{editShowId ? "Edit Show" : "Add Show"}</h2>
-            <input
-              type="text"
-              placeholder="Title"
-              name="title"
-              value={showForm.title}
-              onChange={handleShowInputChange}
-            />
-            <input
-              type="text"
-              placeholder="Genre"
-              name="genre"
-              value={showForm.genre}
-              onChange={handleShowInputChange}
-            />
-            <input
-              type="text"
-              placeholder="Date"
-              name="date"
-              value={showForm.date}
-              onChange={handleShowInputChange}
-            />
-            <input
-              type="text"
-              placeholder="Artist"
-              name="artist"
-              value={showForm.artist}
-              onChange={handleShowInputChange}
-            />
-            <button type="submit">{editShowId ? "Update" : "Add"} Show</button>
-          </form>
-
-          {/* Ratings Form */}
-          <form onSubmit={handleRatingFormSubmit}>
-            <h2>{editRatingId ? "Edit Rating" : "Add Rating"}</h2>
-            <input
-              type="text"
-              placeholder="Votes"
-              name="votes"
-              value={ratingForm.votes}
-              onChange={handleRatingInputChange}
-            />
-            <input
-              type="text"
-              placeholder="Ratings"
-              name="ratings"
-              value={ratingForm.ratings}
-              onChange={handleRatingInputChange}
-            />
-            <input
-              type="text"
-              placeholder="Recommendation"
-              name="recommendation"
-              value={ratingForm.recommendation}
-              onChange={handleRatingInputChange}
-            />
-            <button type="submit">{editRatingId ? "Update" : "Add"} Rating</button>
-          </form>
-
-          {/* Shows Table */}
-          <h2>Shows</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Genre</th>
-                <th>Date</th>
-                <th>Artist</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {shows.map((show) => (
-                <tr key={show.id}>
-                  <td>{show.title}</td>
-                  <td>{show.genre}</td>
-                  <td>{show.date}</td>
-                  <td>{show.artist}</td>
-                  <td>
-                    <button onClick={() => setEditShowId(show.id)}>Edit</button>
-                    <button onClick={() => handleDeleteShow(show.id)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Ratings Table */}
-          <h2>Ratings</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Votes</th>
-                <th>Ratings</th>
-                <th>Recommendation</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ratings.map((rating) => (
-                <tr key={rating.id}>
-                  <td>{rating.votes}</td>
-                  <td>{rating.ratings}</td>
-                  <td>{rating.recommendation}</td>
-                  <td>
-                    <button onClick={() => setEditRatingId(rating.id)}>
-                      Edit
-                    </button>
-                    <button onClick={() => handleDeleteRating(rating.id)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar token={token} onLogout={handleLogout} />
+        <Routes>
+          <Route path="/" element={token ? <Navigate to="/shows" /> : <Login onLogin={handleLogin} />} />
+          <Route path="/shows" element={token ? <ShowList token={token} shows={shows} /> : <Navigate to="/" />} />
+          <Route path="/add-show" element={token ? <ShowForm token={token} /> : <Navigate to="/" />} />
+          <Route
+            path="/recommendations"
+            element={token ? <Recommendations token={token} shows={shows} ratings={ratings} getRecommendedShows={getRecommendedShows} /> : <Navigate to="/" />}
+          />
+        </Routes>
+      </div>
+    </Router>
   );
-};
+}
 
 export default App;

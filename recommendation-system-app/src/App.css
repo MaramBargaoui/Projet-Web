@@ -1,0 +1,69 @@
+.App {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+  background-color: #f0f0f0;
+  padding: 10px 0;
+}
+
+nav ul li a, nav ul li button {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.login-form, .show-form, .recommendations {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+form, .filters {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+input, textarea, button {
+  margin: 10px 0;
+  padding: 5px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+}
+
+.show-list ul, .recommendations ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.show-list li, .recommendations li {
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.filters {
+  margin-bottom: 20px;
+}
+
