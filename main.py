@@ -18,55 +18,42 @@ app = FastAPI()
 
 load_dotenv()
 
-
 SECRET_KEY = os.getenv("SECRET_KEY", "your_default_secret_key")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 
-
+# Print variables for debugging (remove in production)
 print("SECRET_KEY:", SECRET_KEY)
 print("ALGORITHM:", ALGORITHM)
 print("ACCESS_TOKEN_EXPIRE_MINUTES:", ACCESS_TOKEN_EXPIRE_MINUTES)
 
-
-
 origins = [
-    "http://localhost:3000",  
+    "http://localhost:3000",
 ]
-
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins, 
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  
-    allow_headers=["*"], 
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
 )
 
 Base.metadata.create_all(bind=engine)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+# Only one definition of CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-plain_password = "password"
-STORED_HASHED_PASSWORD="$2b$12$W1DBvzcp3jQvat6sKHLIE.2jC5rNTLeWFq450h701zB.CyMNjvdMS"
 
-
-print(f"New hashed password: {STORED_HASHED_PASSWORD}")
-
-
-result = pwd_context.verify(plain_password,STORED_HASHED_PASSWORD )
-print(f"Password matches: {result}")
-
+# Pre-defined hashed password
+STORED_HASHED_PASSWORD = "$2b$12$W1DBvzcp3jQvat6sKHLIE.2jC5rNTLeWFq450h701zB.CyMNjvdMS"
 
 class User(BaseModel):
     username: str
-   
 
 def verify_password(plain_password, STORED_HASHED_PASSWORD):
     return pwd_context.verify(plain_password, STORED_HASHED_PASSWORD)
-
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
@@ -77,7 +64,6 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -94,7 +80,6 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     except JWTError:
         raise credentials_exception
 
-
 def get_db():
     db = SessionLocal()
     try:
@@ -102,23 +87,17 @@ def get_db():
     finally:
         db.close()
 
-
 @app.post("/token/")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    print(f"Attempting login for user: {form_data.username}")  
     if form_data.username != "testuser" or not verify_password(form_data.password, STORED_HASHED_PASSWORD):
-
-
-        print("Password verification failed.")  
         raise HTTPException(status_code=401, detail="Invalid credentials")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": form_data.username}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
 
-
 @app.get("/shows/")
 async def read_shows(db: Session = Depends(get_db)):
-    shows = db.query(Shows).all()  
+    shows = db.query(Shows).all()
     return shows
 
 @app.get("/shows/{show_id}", response_model=Show)
@@ -127,14 +106,41 @@ def read_show_by_id(show_id: int, db: Session = Depends(get_db)):
     if not show:
         raise HTTPException(status_code=404, detail="Show not found")
     return show
-
+    
 @app.post("/shows/", response_model=Show)
-async def create_show(show: Show, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    new_show = Shows(**show.dict(exclude_unset=True))
-    db.add(new_show)
-    db.commit()
-    db.refresh(new_show)
-    return new_show
+async def create_show(
+    show: Show, 
+    db: Session = Depends(get_db), 
+    current_user: User = Depends(get_current_user)
+):
+    try:
+        # Vérification d'un doublon basé sur le titre
+        existing_show = db.query(Shows).filter(Shows.title == show.title).first()
+        if existing_show:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"A show with the title '{show.title}' already exists."
+            )
+
+        # Vérification supplémentaire : date positive
+        if show.date <= 0:
+            raise HTTPException(
+                status_code=400,
+                detail="The 'date' field must be a positive integer."
+            )
+
+        # Crée un nouvel enregistrement sans l'ID (il sera attribué automatiquement)
+        new_show = Shows(**show.dict(exclude_unset=True))
+        db.add(new_show)
+        db.commit()
+        db.refresh(new_show)  # Rafraîchit pour récupérer l'ID généré
+        return new_show
+
+    except Exception as e:
+        # Enregistrer l'erreur dans les logs pour débogage
+        print(f"Error occurred: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
 
 @app.put("/shows/{show_id}", response_model=Show)
 def update_show(show_id: int, show: Show, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

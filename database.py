@@ -7,9 +7,7 @@ from sqlalchemy.orm import sessionmaker
 
 conn = sqlite3.connect('recommendation_system.db')
 
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+
 
 
 Base = declarative_base()
