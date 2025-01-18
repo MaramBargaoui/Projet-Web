@@ -22,7 +22,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "your_default_secret_key")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 
-# Print variables for debugging (remove in production)
+
 print("SECRET_KEY:", SECRET_KEY)
 print("ALGORITHM:", ALGORITHM)
 print("ACCESS_TOKEN_EXPIRE_MINUTES:", ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -43,10 +43,10 @@ Base.metadata.create_all(bind=engine)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-# Only one definition of CryptContext
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# Pre-defined hashed password
+
 STORED_HASHED_PASSWORD = "$2b$12$W1DBvzcp3jQvat6sKHLIE.2jC5rNTLeWFq450h701zB.CyMNjvdMS"
 
 class User(BaseModel):
@@ -114,7 +114,7 @@ async def create_show(
     current_user: User = Depends(get_current_user)
 ):
     try:
-        # Vérification d'un doublon basé sur le titre
+        
         existing_show = db.query(Shows).filter(Shows.title == show.title).first()
         if existing_show:
             raise HTTPException(
@@ -122,22 +122,21 @@ async def create_show(
                 detail=f"A show with the title '{show.title}' already exists."
             )
 
-        # Vérification supplémentaire : date positive
+      
         if show.date <= 0:
             raise HTTPException(
                 status_code=400,
                 detail="The 'date' field must be a positive integer."
             )
 
-        # Crée un nouvel enregistrement sans l'ID (il sera attribué automatiquement)
         new_show = Shows(**show.dict(exclude_unset=True))
         db.add(new_show)
         db.commit()
-        db.refresh(new_show)  # Rafraîchit pour récupérer l'ID généré
+        db.refresh(new_show)  
         return new_show
 
     except Exception as e:
-        # Enregistrer l'erreur dans les logs pour débogage
+       
         print(f"Error occurred: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
