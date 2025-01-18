@@ -1,0 +1,121 @@
+/* Conteneur de la table des shows (si vous utilisez une table) */
+.show-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1rem;
+}
+
+/* Styles pour les cellules de la table */
+.show-table th, .show-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+/* En-tête de la table */
+.show-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+/* Lignes de la table */
+.show-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Nouveau style pour afficher les shows sous forme de cartes */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Espacement entre les cartes */
+  justify-content: center;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre portée douce pour un effet de profondeur */
+  width: 250px; /* Largeur de la carte */
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation douce pour l'interaction */
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-10px); /* Légère remontée de la carte au survol */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ombre plus forte au survol */
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  margin: 10px 0;
+  color: #333;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.card .card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card .card-footer button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.card .card-footer button:hover {
+  background-color: #0056b3;
+}
+/* Style général pour les inputs */
+input {
+  width: 100%; /* Pour qu'il prenne toute la largeur de son conteneur */
+  padding: 10px 15px; /* Ajout de padding pour aérer le texte */
+  font-size: 1rem; /* Taille de police confortable */
+  border: 2px solid #ddd; /* Bordure fine et claire */
+  border-radius: 8px; /* Coins arrondis */
+  background-color: #f9f9f9; /* Couleur de fond douce */
+  color: #333; /* Couleur du texte */
+  box-sizing: border-box; /* Pour inclure le padding dans la largeur totale */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Animation douce pour l'effet de focus */
+}
+
+/* Effet au focus de l'input */
+input:focus {
+  border-color: #007bff; /* Changer la couleur de la bordure au focus */
+  background-color: #fff; /* Changer la couleur de fond au focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Ajouter une ombre légère au focus */
+  outline: none; /* Supprimer l'outline par défaut */
+}
+
+/* Style des inputs avec placeholder */
+input::placeholder {
+  color: #888; /* Couleur du placeholder */
+  font-style: italic; /* Style en italique pour le texte du placeholder */
+}
+
+/* Responsive: ajuster les inputs pour les écrans plus petits */
+@media (max-width: 600px) {
+  input {
+    font-size: 0.9rem; /* Réduire la taille de police sur mobile */
+    padding: 8px 12px; /* Ajuster le padding */
+  }
+}
+
