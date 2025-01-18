@@ -2,7 +2,7 @@ import React, { useState, useEffect, use } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 function EditShow() {
-  const { id } = useParams(); // Récupère l'ID du show à modifier
+  const { id } = useParams(); 
   const navigate = useNavigate();
   const [token] = useState(localStorage.getItem('token')); 
   const [show, setShow] = useState({
